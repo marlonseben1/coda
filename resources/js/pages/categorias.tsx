@@ -1,20 +1,31 @@
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
-import { categorias } from '@/routes';
 import { Head } from '@inertiajs/react';
+import { type CategoriaData } from '@/components/create-categoria-dialog';
+import CategoriasAccordion from '@/components/categorias-accordion';
+import CreateCategoriaDialog from '@/components/create-categoria-dialog';
+import { categorias } from '@/routes';
 
-export default function Categorias() {
+interface Props {
+    categorias: CategoriaData[];
+}
+
+export default function Categorias({ categorias }: Props) {
     return (
         <>
             <Head title="Categorias" />
+
+            <div className="space-y-6 p-6">
+                <div className="flex justify-end">
+                    <CreateCategoriaDialog categorias={categorias} />
+                </div>
+
+                <div className="mx-auto max-w-2xl">
+                    <CategoriasAccordion categorias={categorias} />
+                </div>
+            </div>
         </>
     );
 }
 
 Categorias.layout = {
-    breadcrumbs: [
-        {
-            title: 'Categorias',
-            href: categorias(),
-        },
-    ],
+    breadcrumbs: [{ title: 'Categorias', href: categorias() }],
 };

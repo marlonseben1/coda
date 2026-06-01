@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ContaController;
 use App\Http\Controllers\TransferenciaController;
 use Illuminate\Support\Facades\Route;
@@ -16,7 +17,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('contas/{conta}', [ContaController::class, 'destroy'])->name('contas.destroy');
     Route::get('transferencias', [TransferenciaController::class, 'index'])->name('transferencias');
     Route::post('transferencias', [TransferenciaController::class, 'store'])->name('transferencias.store');
-    Route::inertia('categorias', 'categorias')->name('categorias');
+    Route::get('categorias', [CategoriaController::class, 'index'])->name('categorias');
+    Route::post('categorias', [CategoriaController::class, 'store'])->name('categorias.store');
+    Route::put('categorias/{categoria}', [CategoriaController::class, 'update'])->name('categorias.update');
+    Route::delete('categorias/{categoria}', [CategoriaController::class, 'destroy'])->name('categorias.destroy');
 });
 
 require __DIR__.'/settings.php';
