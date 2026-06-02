@@ -4,13 +4,18 @@ namespace App\Models;
 
 use App\Enums\ContaBanco;
 use App\Enums\ContaTipo;
+use Database\Factories\ContaFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 #[Fillable(['user_id', 'nome', 'tipo', 'banco', 'saldo_inicial', 'saldo_atual', 'is_active'])]
 class Conta extends Model
 {
+    /** @use HasFactory<ContaFactory> */
+    use HasFactory;
+
     protected function casts(): array
     {
         return [
