@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ContaController;
+use App\Http\Controllers\TransacaoController;
 use App\Http\Controllers\TransferenciaController;
 use Illuminate\Support\Facades\Route;
 
@@ -9,7 +10,11 @@ Route::inertia('/', 'welcome')->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'dashboard')->name('dashboard');
-    Route::inertia('extrato', 'extrato')->name('extrato');
+    Route::get('extrato', [TransacaoController::class, 'index'])->name('extrato');
+    Route::get('transacoes/create', [TransacaoController::class, 'create'])->name('transacoes.create');
+    Route::post('transacoes', [TransacaoController::class, 'store'])->name('transacoes.store');
+    Route::put('transacoes/{transacao}', [TransacaoController::class, 'update'])->name('transacoes.update');
+    Route::delete('transacoes/{transacao}', [TransacaoController::class, 'destroy'])->name('transacoes.destroy');
     Route::inertia('assinaturas', 'assinaturas')->name('assinaturas');
     Route::get('contas', [ContaController::class, 'index'])->name('contas');
     Route::post('contas', [ContaController::class, 'store'])->name('contas.store');
