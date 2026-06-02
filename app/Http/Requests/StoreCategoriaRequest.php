@@ -35,7 +35,7 @@ class StoreCategoriaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255'],
+            'nome' => ['required', 'string', 'max:30'],
             'icone' => is_null($this->categoria_pai_id)
                 ? ['required', 'string', 'max:50']
                 : ['nullable', 'string', 'max:50'],

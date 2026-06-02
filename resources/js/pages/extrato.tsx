@@ -5,6 +5,7 @@ import { useState } from 'react';
 import TransacaoController from '@/actions/App/Http/Controllers/TransacaoController';
 import ConfirmDialog from '@/components/confirm-dialog';
 import CreateTransacaoDialog, { type TransacaoData } from '@/components/create-transacao-dialog';
+import FilterDialog from '@/components/filter-dialog';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -14,13 +15,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import Pagination, { type PaginatorLink } from '@/components/ui/pagination';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
 import { formatSaldo } from '@/utils/currency/currency';
 import { formatDate } from '@/utils/date/date';
 import { iconesPorNome } from '@/utils/icones-categorias';
@@ -46,6 +40,7 @@ interface Paginated<T> {
 }
 
 interface Filters {
+    [key: string]: string | undefined;
     tipo?: string;
     conta_id?: string;
     status?: string;
@@ -84,10 +79,6 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
         router.delete(TransacaoController.destroy.url({ transacao: deletingTransacao.id }), {
             onSuccess: () => setDeletingTransacao(null),
         });
-    }
-
-    function handleFilter(key: string, value: string) {
-        router.visit(extrato.url({ mergeQuery: { [key]: value === 'all' ? undefined : value } }));
     }
 
     function sortUrl(field: 'data' | 'valor') {
@@ -130,63 +121,41 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
 
             <div className="space-y-6 p-6">
                 {/* Filtros */}
-                <div className="flex flex-wrap items-center gap-3">
-                    <Select value={filters.tipo ?? 'all'} onValueChange={(v) => handleFilter('tipo', v)}>
-                        <SelectTrigger className="w-36">
-                            <SelectValue placeholder="Tipo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
-                            <SelectItem value="1">Receitas</SelectItem>
-                            <SelectItem value="2">Despesas</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={filters.status ?? 'all'} onValueChange={(v) => handleFilter('status', v)}>
-                        <SelectTrigger className="w-36">
-                            <SelectValue placeholder="Status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Todos</SelectItem>
-                            <SelectItem value="2">Realizadas</SelectItem>
-                            <SelectItem value="1">Agendadas</SelectItem>
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={filters.conta_id ?? 'all'} onValueChange={(v) => handleFilter('conta_id', v)}>
-                        <SelectTrigger className="w-44">
-                            <SelectValue placeholder="Conta" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Todas as contas</SelectItem>
-                            {contas.map((c) => (
-                                <SelectItem key={c.id} value={String(c.id)}>
-                                    {c.nome}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    <Select value={filters.categoria_pai_id ?? 'all'} onValueChange={(v) => handleFilter('categoria_pai_id', v)}>
-                        <SelectTrigger className="w-44">
-                            <SelectValue placeholder="Categoria" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            <SelectItem value="all">Todas as categorias</SelectItem>
-                            {categoriasPai.map((c) => (
-                                <SelectItem key={c.id} value={String(c.id)}>
-                                    {c.nome}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-
-                    {Object.values(filters).some(Boolean) && (
-                        <Link href={extrato.url()} className="text-sm text-muted-foreground hover:text-foreground">
-                            Limpar filtros
-                        </Link>
-                    )}
-                </div>
+                <FilterDialog
+                    filters={filters}
+                    fields={[
+                        {
+                            key: 'tipo',
+                            label: 'Tipo',
+                            options: [
+                                { value: '1', label: 'Receitas' },
+                                { value: '2', label: 'Despesas' },
+                            ],
+                        },
+                        {
+                            key: 'status',
+                            label: 'Status',
+                            options: [
+                                { value: '2', label: 'Realizadas' },
+                                { value: '1', label: 'Agendadas' },
+                            ],
+                        },
+                        {
+                            key: 'conta_id',
+                            label: 'Conta',
+                            allLabel: 'Todas as contas',
+                            options: contas.map((c) => ({ value: String(c.id), label: c.nome })),
+                        },
+                        {
+                            key: 'categoria_pai_id',
+                            label: 'Categoria',
+                            allLabel: 'Todas as categorias',
+                            options: categoriasPai.map((c) => ({ value: String(c.id), label: c.nome })),
+                        },
+                    ]}
+                    onApply={(newFilters) => router.visit(extrato.url({ mergeQuery: newFilters }))}
+                    onClear={() => router.visit(extrato.url())}
+                />
 
                 {lista.length === 0 ? (
                     <p className="py-12 text-center text-sm text-muted-foreground">
@@ -195,7 +164,7 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                 ) : (
                     <>
                         {/* Desktop: tabela */}
-                        <div className="hidden rounded-md border md:block">
+                        <div className="hidden rounded-md border min-[1080px]:block">
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="border-b bg-muted/50">
@@ -259,7 +228,7 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                         </div>
 
                         {/* Mobile: cards */}
-                        <div className="rounded-md border md:hidden">
+                        <div className="rounded-md border min-[1080px]:hidden">
                             {lista.map((t) => {
                                 const Icone = iconesPorNome[t.categoria_icone];
                                 return (

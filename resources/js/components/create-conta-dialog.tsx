@@ -107,6 +107,7 @@ export default function CreateContaDialog({ conta, open: controlledOpen, onOpenC
                                         name="nome"
                                         placeholder="Ex: Conta Nubank"
                                         defaultValue={conta?.nome}
+                                        maxLength={30}
                                         autoFocus
                                         aria-invalid={!!errors.nome}
                                     />
