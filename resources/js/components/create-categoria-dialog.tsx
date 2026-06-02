@@ -205,6 +205,7 @@ export default function CreateCategoriaDialog({
                                     name="nome"
                                     placeholder="Ex: Alimentação"
                                     defaultValue={categoria?.nome}
+                                    maxLength={30}
                                     autoFocus
                                     aria-invalid={!!errors.nome}
                                 />

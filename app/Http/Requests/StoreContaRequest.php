@@ -33,7 +33,7 @@ class StoreContaRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nome' => ['required', 'string', 'max:255'],
+            'nome' => ['required', 'string', 'max:30'],
             'saldo_inicial' => ['required', 'numeric', 'min:0'],
             'tipo' => ['required', new Enum(ContaTipo::class)],
             'banco' => ['required', new Enum(ContaBanco::class)],
