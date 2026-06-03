@@ -1,10 +1,19 @@
 import { Head, Link } from '@inertiajs/react';
 import { router } from '@inertiajs/react';
-import { ArrowDown, ArrowUp, ArrowUpDown, MoreHorizontal, Pencil, Trash2 } from 'lucide-react';
+import {
+    ArrowDown,
+    ArrowUp,
+    ArrowUpDown,
+    MoreHorizontal,
+    Pencil,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 import TransacaoController from '@/actions/App/Http/Controllers/TransacaoController';
 import ConfirmDialog from '@/components/confirm-dialog';
-import CreateTransacaoDialog, { type TransacaoData } from '@/components/create-transacao-dialog';
+import CreateTransacaoDialog, {
+    type TransacaoData,
+} from '@/components/create-transacao-dialog';
 import FilterDialog from '@/components/filter-dialog';
 import { Button } from '@/components/ui/button';
 import {
@@ -67,28 +76,47 @@ function formatValor(valor: string, tipo: number) {
     return sinal + formatSaldo(valor);
 }
 
-export default function Extrato({ contas, categorias, transacoes, sort, orderBy, filters }: Props) {
-    const [editingTransacao, setEditingTransacao] = useState<TransacaoData | null>(null);
-    const [deletingTransacao, setDeletingTransacao] = useState<TransacaoData | null>(null);
+export default function Extrato({
+    contas,
+    categorias,
+    transacoes,
+    sort,
+    orderBy,
+    filters,
+}: Props) {
+    const [editingTransacao, setEditingTransacao] =
+        useState<TransacaoData | null>(null);
+    const [deletingTransacao, setDeletingTransacao] =
+        useState<TransacaoData | null>(null);
 
     const lista = transacoes.data;
     const categoriasPai = categorias.filter((c) => c.categoria_pai_id === null);
 
     function handleDelete() {
         if (!deletingTransacao) return;
-        router.delete(TransacaoController.destroy.url({ transacao: deletingTransacao.id }), {
-            onSuccess: () => setDeletingTransacao(null),
-        });
+        router.delete(
+            TransacaoController.destroy.url({
+                transacao: deletingTransacao.id,
+            }),
+            {
+                onSuccess: () => setDeletingTransacao(null),
+            },
+        );
     }
 
     function sortUrl(field: 'data' | 'valor') {
-        const nextSort = orderBy === field ? (sort === 'desc' ? 'asc' : 'desc') : 'desc';
+        const nextSort =
+            orderBy === field ? (sort === 'desc' ? 'asc' : 'desc') : 'desc';
         return extrato.url({ mergeQuery: { order_by: field, sort: nextSort } });
     }
 
     function sortIcon(field: 'data' | 'valor') {
         if (orderBy !== field) return <ArrowUpDown className="size-3" />;
-        return sort === 'desc' ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" />;
+        return sort === 'desc' ? (
+            <ArrowDown className="size-3" />
+        ) : (
+            <ArrowUp className="size-3" />
+        );
     }
 
     function renderActions(t: TransacaoData) {
@@ -106,7 +134,10 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                         Editar
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem variant="destructive" onClick={() => setDeletingTransacao(t)}>
+                    <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => setDeletingTransacao(t)}
+                    >
                         <Trash2 />
                         Excluir
                     </DropdownMenuItem>
@@ -144,23 +175,29 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                             key: 'conta_id',
                             label: 'Conta',
                             allLabel: 'Todas as contas',
-                            options: contas.map((c) => ({ value: String(c.id), label: c.nome })),
+                            options: contas.map((c) => ({
+                                value: String(c.id),
+                                label: c.nome,
+                            })),
                         },
                         {
                             key: 'categoria_pai_id',
                             label: 'Categoria',
                             allLabel: 'Todas as categorias',
-                            options: categoriasPai.map((c) => ({ value: String(c.id), label: c.nome })),
+                            options: categoriasPai.map((c) => ({
+                                value: String(c.id),
+                                label: c.nome,
+                            })),
                         },
                     ]}
-                    onApply={(newFilters) => router.visit(extrato.url({ mergeQuery: newFilters }))}
+                    onApply={(newFilters) =>
+                        router.visit(extrato.url({ mergeQuery: newFilters }))
+                    }
                     onClear={() => router.visit(extrato.url())}
                 />
 
                 {lista.length === 0 ? (
-                    <p className="empty-state">
-                        Nenhuma transação encontrada.
-                    </p>
+                    <p className="empty-state">Nenhuma transação encontrada.</p>
                 ) : (
                     <>
                         {/* Desktop: tabela */}
@@ -177,10 +214,18 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                                                 {sortIcon('data')}
                                             </Link>
                                         </th>
-                                        <th className="data-table-header-cell">Conta</th>
-                                        <th className="data-table-header-cell">Categoria</th>
-                                        <th className="data-table-header-cell">Tipo</th>
-                                        <th className="data-table-header-cell">Status</th>
+                                        <th className="data-table-header-cell">
+                                            Conta
+                                        </th>
+                                        <th className="data-table-header-cell">
+                                            Categoria
+                                        </th>
+                                        <th className="data-table-header-cell">
+                                            Tipo
+                                        </th>
+                                        <th className="data-table-header-cell">
+                                            Status
+                                        </th>
                                         <th className="data-table-header-cell text-right">
                                             <Link
                                                 href={sortUrl('valor')}
@@ -190,24 +235,40 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                                                 {sortIcon('valor')}
                                             </Link>
                                         </th>
-                                        <th className="data-table-header-cell text-center">Ações</th>
+                                        <th className="data-table-header-cell text-center">
+                                            Ações
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {lista.map((t) => {
-                                        const Icone = iconesPorNome[t.categoria_icone];
+                                        const Icone =
+                                            iconesPorNome[t.categoria_icone];
                                         return (
-                                            <tr key={t.id} className="data-table-row">
-                                                <td className="data-table-cell text-muted-foreground">{formatDate(t.data_transacao)}</td>
-                                                <td className="data-table-cell">{t.conta}</td>
+                                            <tr
+                                                key={t.id}
+                                                className="data-table-row"
+                                            >
+                                                <td className="data-table-cell text-muted-foreground">
+                                                    {formatDate(
+                                                        t.data_transacao,
+                                                    )}
+                                                </td>
+                                                <td className="data-table-cell">
+                                                    {t.conta}
+                                                </td>
                                                 <td className="data-table-cell">
                                                     <span className="inline-flex items-center gap-1.5">
-                                                        {Icone && <Icone className="size-3.5 text-muted-foreground" />}
+                                                        {Icone && (
+                                                            <Icone className="size-3.5 text-muted-foreground" />
+                                                        )}
                                                         {t.categoria}
                                                     </span>
                                                 </td>
                                                 <td className="data-table-cell">
-                                                    <span className={`badge-pill font-medium ${tipoClasses(t.tipo)}`}>
+                                                    <span
+                                                        className={`badge-pill font-medium ${tipoClasses(t.tipo)}`}
+                                                    >
                                                         {t.tipo_label}
                                                     </span>
                                                 </td>
@@ -216,10 +277,17 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                                                         {t.status_label}
                                                     </span>
                                                 </td>
-                                                <td className={`data-table-cell text-right tabular-nums font-medium ${tipoClasses(t.tipo)}`}>
-                                                    {formatValor(t.valor_transacao, t.tipo)}
+                                                <td
+                                                    className={`data-table-cell text-right font-medium tabular-nums ${tipoClasses(t.tipo)}`}
+                                                >
+                                                    {formatValor(
+                                                        t.valor_transacao,
+                                                        t.tipo,
+                                                    )}
                                                 </td>
-                                                <td className="data-table-cell text-center">{renderActions(t)}</td>
+                                                <td className="data-table-cell text-center">
+                                                    {renderActions(t)}
+                                                </td>
                                             </tr>
                                         );
                                     })}
@@ -235,7 +303,9 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                                     <div key={t.id} className="card-list-item">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <span className={`badge-pill font-medium ${tipoClasses(t.tipo)}`}>
+                                                <span
+                                                    className={`badge-pill font-medium ${tipoClasses(t.tipo)}`}
+                                                >
                                                     {t.tipo_label}
                                                 </span>
                                                 <span className="badge-pill text-muted-foreground">
@@ -244,18 +314,29 @@ export default function Extrato({ contas, categorias, transacoes, sort, orderBy,
                                             </div>
                                             {renderActions(t)}
                                         </div>
-                                        <p className="mt-1 text-sm font-semibold">{t.descricao}</p>
+                                        <p className="mt-1 text-sm font-semibold">
+                                            {t.descricao}
+                                        </p>
                                         <div className="mt-0.5 flex items-center gap-3 text-xs text-muted-foreground">
                                             <span className="inline-flex items-center gap-1">
-                                                {Icone && <Icone className="size-3" />}
+                                                {Icone && (
+                                                    <Icone className="size-3" />
+                                                )}
                                                 {t.categoria}
                                             </span>
                                             <span>{t.conta}</span>
                                         </div>
                                         <div className="mt-1 flex items-center justify-between text-sm">
-                                            <span className="text-muted-foreground">{formatDate(t.data_transacao)}</span>
-                                            <span className={`tabular-nums font-semibold ${tipoClasses(t.tipo)}`}>
-                                                {formatValor(t.valor_transacao, t.tipo)}
+                                            <span className="text-muted-foreground">
+                                                {formatDate(t.data_transacao)}
+                                            </span>
+                                            <span
+                                                className={`font-semibold tabular-nums ${tipoClasses(t.tipo)}`}
+                                            >
+                                                {formatValor(
+                                                    t.valor_transacao,
+                                                    t.tipo,
+                                                )}
                                             </span>
                                         </div>
                                     </div>
