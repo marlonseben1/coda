@@ -38,7 +38,7 @@ export default function Transferencias({ contas: listContas, transferencias: pag
         <>
             <Head title="Histórico de Transferências" />
 
-            <div className="space-y-6 p-6">
+            <div className="page-content">
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" asChild>
                         <Link href={contas()}>Contas</Link>
@@ -50,7 +50,7 @@ export default function Transferencias({ contas: listContas, transferencias: pag
                 </div>
 
                 {lista.length === 0 ? (
-                    <p className="py-12 text-center text-sm text-muted-foreground">
+                    <p className="empty-state">
                         Nenhuma transferência realizada ainda.
                     </p>
                 ) : (
@@ -59,7 +59,7 @@ export default function Transferencias({ contas: listContas, transferencias: pag
                             <table className="w-full text-sm">
                                 <thead>
                                     <tr className="border-b bg-muted/50">
-                                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">
+                                        <th className="data-table-header-cell">
                                             <Link
                                                 href={transferencias.url({ query: { order_by: 'data', sort: orderBy === 'data' ? (sort === 'desc' ? 'asc' : 'desc') : 'desc' } })}
                                                 className="inline-flex items-center gap-1 hover:text-foreground"
@@ -68,9 +68,9 @@ export default function Transferencias({ contas: listContas, transferencias: pag
                                                 {orderBy === 'data' ? (sort === 'desc' ? <ArrowDown className="size-3" /> : <ArrowUp className="size-3" />) : <ArrowUpDown className="size-3" />}
                                             </Link>
                                         </th>
-                                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Conta origem</th>
-                                        <th className="px-4 py-3 text-left font-medium text-muted-foreground">Conta destino</th>
-                                        <th className="px-4 py-3 text-right font-medium text-muted-foreground">
+                                        <th className="data-table-header-cell">Conta origem</th>
+                                        <th className="data-table-header-cell">Conta destino</th>
+                                        <th className="data-table-header-cell text-right">
                                             <Link
                                                 href={transferencias.url({ query: { order_by: 'valor', sort: orderBy === 'valor' ? (sort === 'desc' ? 'asc' : 'desc') : 'desc' } })}
                                                 className="inline-flex items-center justify-end gap-1 hover:text-foreground"
@@ -83,11 +83,11 @@ export default function Transferencias({ contas: listContas, transferencias: pag
                                 </thead>
                                 <tbody>
                                     {lista.map((t) => (
-                                        <tr key={t.id} className="border-b transition-colors last:border-0 hover:bg-muted/30">
-                                            <td className="px-4 py-3 text-muted-foreground">{formatDate(t.data_transferencia)}</td>
-                                            <td className="px-4 py-3">{t.from_account}</td>
-                                            <td className="px-4 py-3">{t.to_account}</td>
-                                            <td className="px-4 py-3 text-right tabular-nums">{formatSaldo(t.valor_transferencia)}</td>
+                                        <tr key={t.id} className="data-table-row">
+                                            <td className="data-table-cell text-muted-foreground">{formatDate(t.data_transferencia)}</td>
+                                            <td className="data-table-cell">{t.from_account}</td>
+                                            <td className="data-table-cell">{t.to_account}</td>
+                                            <td className="data-table-cell text-right tabular-nums">{formatSaldo(t.valor_transferencia)}</td>
                                         </tr>
                                     ))}
                                 </tbody>

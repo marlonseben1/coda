@@ -27,7 +27,7 @@ export default function ContasTable({ contas }: Props) {
 
     if (contas.length === 0) {
         return (
-            <p className="py-12 text-center text-sm text-muted-foreground">
+            <p className="empty-state">
                 Nenhuma conta cadastrada. Crie sua primeira conta!
             </p>
         );
@@ -68,21 +68,21 @@ export default function ContasTable({ contas }: Props) {
                 <table className="w-full text-sm">
                     <thead>
                         <tr className="border-b bg-muted/50">
-                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Nome da conta</th>
-                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Tipo</th>
-                            <th className="px-4 py-3 text-left font-medium text-muted-foreground">Banco</th>
-                            <th className="px-4 py-3 text-right font-medium text-muted-foreground">Saldo</th>
-                            <th className="px-4 py-3 text-center font-medium text-muted-foreground">Ações</th>
+                            <th className="data-table-header-cell">Nome da conta</th>
+                            <th className="data-table-header-cell">Tipo</th>
+                            <th className="data-table-header-cell">Banco</th>
+                            <th className="data-table-header-cell text-right">Saldo</th>
+                            <th className="data-table-header-cell text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {contas.map((conta) => (
-                            <tr key={conta.id} className="border-b transition-colors last:border-0 hover:bg-muted/30">
-                                <td className="px-4 py-3 font-medium">{conta.nome}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{conta.tipo_label}</td>
-                                <td className="px-4 py-3 text-muted-foreground">{conta.banco_label}</td>
-                                <td className="px-4 py-3 text-right tabular-nums">{formatSaldo(conta.saldo_atual)}</td>
-                                <td className="px-4 py-3 text-center">{renderActions(conta)}</td>
+                            <tr key={conta.id} className="data-table-row">
+                                <td className="data-table-cell font-medium">{conta.nome}</td>
+                                <td className="data-table-cell text-muted-foreground">{conta.tipo_label}</td>
+                                <td className="data-table-cell text-muted-foreground">{conta.banco_label}</td>
+                                <td className="data-table-cell text-right tabular-nums">{formatSaldo(conta.saldo_atual)}</td>
+                                <td className="data-table-cell text-center">{renderActions(conta)}</td>
                             </tr>
                         ))}
                     </tbody>
@@ -92,9 +92,9 @@ export default function ContasTable({ contas }: Props) {
             {/* Mobile: cards */}
             <div className="rounded-md border md:hidden">
                 {contas.map((conta) => (
-                    <div key={conta.id} className="border-b px-4 py-3 last:border-0">
+                    <div key={conta.id} className="card-list-item">
                         <div className="flex items-center justify-between">
-                            <span className="rounded-full border px-2 py-0.5 text-xs text-muted-foreground">
+                            <span className="badge-pill text-muted-foreground">
                                 {conta.tipo_label}
                             </span>
                             {renderActions(conta)}

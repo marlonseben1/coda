@@ -25,7 +25,7 @@ export default function Contas({ contas: paginatedContas, contasSelect }: Props)
         <>
             <Head title="Contas" />
 
-            <div className="space-y-6 p-6">
+            <div className="page-content">
                 <div className="flex justify-end gap-2">
                     <Button variant="outline" className="hidden sm:inline-flex" asChild>
                         <Link href={transferencias()}>Histórico de transferências</Link>

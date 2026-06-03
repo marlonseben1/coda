@@ -13,7 +13,7 @@ export default function Categorias({ categorias }: Props) {
         <>
             <Head title="Categorias" />
 
-            <div className="space-y-6 p-6">
+            <div className="page-content">
                 <div className="flex justify-end">
                     <CreateCategoriaDialog categorias={categorias} />
                 </div>
