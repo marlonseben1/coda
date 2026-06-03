@@ -4,9 +4,11 @@ import {
     ArrowDown,
     ArrowUp,
     ArrowUpDown,
+    CheckCircle,
     MoreHorizontal,
     Pencil,
     Trash2,
+    XCircle,
 } from 'lucide-react';
 import { useState } from 'react';
 import TransacaoController from '@/actions/App/Http/Controllers/TransacaoController';
@@ -119,7 +121,45 @@ export default function Extrato({
         );
     }
 
+    function handleAlterarStatus(t: TransacaoData, novoStatus: number) {
+        router
+            .optimistic((props) => {
+                const { transacoes } = props as Props;
+                return {
+                    transacoes: {
+                        ...transacoes,
+                        data: transacoes.data.map((item) =>
+                            item.id === t.id ? { ...item, status: novoStatus } : item,
+                        ),
+                    },
+                };
+            })
+            .put(
+                TransacaoController.update.url({ transacao: t.id }),
+                {
+                    conta_id: t.conta_id,
+                    categoria_id: t.categoria_id,
+                    tipo: t.tipo,
+                    descricao: t.descricao,
+                    data_transacao: t.data_transacao,
+                    valor_transacao: t.valor_transacao,
+                    status: novoStatus,
+                },
+                { only: ['transacoes'] },
+            );
+    }
+
     function renderActions(t: TransacaoData) {
+        const isAgendada = t.status === 1;
+        const isReceita = t.tipo === 1;
+
+        const marcarRealizadaLabel = isReceita
+            ? 'Marcar como recebido'
+            : 'Marcar como paga';
+        const marcarAgendadaLabel = isReceita
+            ? 'Marcar como não recebido'
+            : 'Marcar como não paga';
+
         return (
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -129,6 +169,27 @@ export default function Extrato({
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
+                    {isAgendada ? (
+                        <>
+                            <DropdownMenuItem
+                                onClick={() => handleAlterarStatus(t, 2)}
+                            >
+                                <CheckCircle />
+                                {marcarRealizadaLabel}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    ) : (
+                        <>
+                            <DropdownMenuItem
+                                onClick={() => handleAlterarStatus(t, 1)}
+                            >
+                                <XCircle />
+                                {marcarAgendadaLabel}
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                        </>
+                    )}
                     <DropdownMenuItem onClick={() => setEditingTransacao(t)}>
                         <Pencil />
                         Editar

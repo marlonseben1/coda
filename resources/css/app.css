@@ -62,8 +62,8 @@
     --color-sidebar-border: var(--sidebar-border);
     --color-sidebar-ring: var(--sidebar-ring);
 
-    --color-receita: oklch(0.765 0.177 161.6);
-    --color-despesa: oklch(0.627 0.238 25.3);
+    --color-receita: oklch(0.765 0.177 163.082);
+    --color-despesa: oklch(0.704 0.191 22.216);
 }
 
 :root {
