@@ -139,7 +139,7 @@ function CategoriaPaiItem({
 
     return (
         <Collapsible open={open} onOpenChange={setOpen}>
-            <div className="flex items-center gap-2 border-b px-4 py-3 last:border-0 hover:bg-muted/30">
+            <div className="card-list-item flex items-center gap-2 hover:bg-muted/30">
                 <CollapsibleTrigger asChild>
                     <button className="flex flex-1 cursor-pointer items-center gap-2 text-left text-sm font-medium">
                         <ChevronDown
