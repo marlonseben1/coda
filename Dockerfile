@@ -55,8 +55,10 @@ COPY --from=assets /app/public/build ./public/build
 COPY . .
 
 RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions storage/logs bootstrap/cache \
+    && chown -R root:www-data /var/www/html \
+    && chmod -R 750 /var/www/html \
     && chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+    && chmod -R 770 storage bootstrap/cache
 
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
