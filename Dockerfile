@@ -25,6 +25,7 @@ COPY public/ public/
 COPY vite.config.ts tsconfig.json ./
 COPY --from=deps /app/resources/js/actions ./resources/js/actions
 COPY --from=deps /app/resources/js/routes ./resources/js/routes
+COPY --from=deps /app/vendor/laravel/wayfinder/resources/js/wayfinder.ts ./resources/js/wayfinder.ts
 
 RUN WAYFINDER_COMMAND=true npm run build
 
