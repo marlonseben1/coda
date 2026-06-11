@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: final
+    restart: unless-stopped
+    env_file:
+      - .env.production
+    volumes:
+      - sqlite_data:/var/www/html/database
+      - storage_data:/var/www/html/storage
+    networks:
+      - coda
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z 127.0.0.1 9000"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: nginx-final
+    restart: unless-stopped
+    ports:
+      - '8080:80'
+    depends_on:
+      app:
+        condition: service_healthy
+    networks:
+      - coda
+
+volumes:
+  sqlite_data:
+  storage_data:
+
+networks:
+  coda:
+    driver: bridge
